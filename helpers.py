@@ -64,7 +64,7 @@ def transcript_by_id(transcript_id):
             session[transcript_id]["results"]["transcripts"][0]["transcript"]
         }
     raise FileNotFoundError(
-        f"The transcription {transcription_id} doesn't exist")
+        f"The transcript {transcript_id} doesn't exist")
 
 
 def file_is_valid(filename):
