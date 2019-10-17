@@ -1,6 +1,7 @@
 import os
 import requests
 import time
+import uuid
 
 import boto3
 from botocore.exceptions import ClientError
@@ -18,7 +19,7 @@ def transcribe(filename):
         aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
         aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
         region_name='us-west-1')
-    job_name = "job14"
+    job_name = str(uuid.uuid4())
     job_uri = f"https://innerstiss-audio-uploads.s3-us-west-1.amazonaws.com/{filename}"
     transcribe.start_transcription_job(TranscriptionJobName=job_name,
                                        Media={'MediaFileUri': job_uri},
