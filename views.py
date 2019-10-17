@@ -23,4 +23,4 @@ def upload():
                 flash("Upload successful")
                 return redirect(url_for("home"))
         flash("Oh no...a file wasn't uploaded.")
-        return redirect(request.url)os.path.
+        return redirect(request.url)
