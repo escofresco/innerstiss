@@ -4,5 +4,6 @@ class Configuration(object):
     #     'engine': 'peewee.SqliteDatabase',
     #     'check_same_thread': False,
     # }
+    UPLOAD_FOLDER = "/tmp"
     DEBUG = True
-    # SECRET_KEY = 'shhhh'
+    SECRET_KEY = 'shhhh'
