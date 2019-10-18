@@ -44,7 +44,7 @@
 
     function uploadAndTranscribe(filename) {
         console.log("called uploadAndTranscribe")
-        socket.emit("upload and transcribe", {"data":filename});
+        socket.emit("upload and transcribe", filename);
     }
 
     socket.on("progress update", function(progress) {
@@ -52,6 +52,7 @@
     });
 
     socket.on("upload and transcription complete", function(transcript_uri) {
+        console.log("called upload and transcription complete")
         location.href = document.location + "/" + transcript_uri;
     });
 </script>
