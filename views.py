@@ -41,6 +41,7 @@ def upload():
                 print(transcript_uri)
                 print("*"*40)
                 #helpers.remove_from_s3(filename)
+                print(f"session var filename{session[filename]}")
                 return redirect(
                     url_for("view_transcript", transcript_id=filename))
         flash("Oh no...a file wasn't uploaded.")

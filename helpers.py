@@ -57,13 +57,18 @@ def transcript_exists(transcript_id):
 
 
 def transcript_by_id(transcript_id):
+    print("="*40)
+    print("transcript_by_id")
     if transcript_exists(transcript_id):
+        print("transcript does exist")
+        print(session[transcript_id])
         return {
             "transcript_title":
             session[transcript_id]["jobName"],
             "transcript_content":
             session[transcript_id]["results"]["transcripts"][0]["transcript"]
         }
+    print("transcript doesn't exist")
     raise FileNotFoundError(
         f"The transcript {transcript_id} doesn't exist")
 
