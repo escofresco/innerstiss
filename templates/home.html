@@ -1,8 +1,33 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form method="POST" action="/" enctype="multipart/form-data">
-    <input type="file" name="file" autocomplete="off" required >
+<form>
+    <input type="file" id="file" name="file" autocomplete="off" required >
     <button type="submit">Upload</button>
 </form>
+<script type="text/javascript">
+    $("form").on("submit", function(event) {
+        event.preventDefault();
+        var formData = new FormData()
+        formData.append("file", $("#file")[0].files[0])
+
+        $.ajax({
+            type: "POST",
+            enctype: "multipart/form-data",
+            url: "/upload",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(result) {
+                console.log(result);
+                location.href = document.location + "/" + result
+            },
+            error: function(msg) {
+                console.log(msg);
+            }
+        });
+    });
+</script>
+
+
 {% endblock content %}
