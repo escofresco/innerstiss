@@ -37,7 +37,7 @@ def upload():
                 transcript_uri = transcribe_res["TranscriptionJob"][
                     "Transcript"]["TranscriptFileUri"]
                 session[filename] = helpers.load_json_from_uri(transcript_uri)
-                helpers.remove_from_s3(filename)
+                #helpers.remove_from_s3(filename)
                 return redirect(
                     url_for("view_transcript", transcript_id=filename))
         flash("Oh no...a file wasn't uploaded.")
