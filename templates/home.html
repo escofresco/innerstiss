@@ -6,6 +6,9 @@
     <button type="submit">Upload</button>
 </form>
 <script type="text/javascript">
+    //var socket = io.connect('http://127.0.0.1:5000');
+    var socket = io.connect("https://speeechtotext.herokuapp.com");
+
     $("form").on("submit", function(event) {
         event.preventDefault();
         var formData = new FormData()
@@ -20,13 +23,22 @@
             processData: false,
             success: function(result) {
                 console.log(result);
-                location.href = document.location + "/" + result
+                //location.href = document.location + "/" + result
+                uploadAndTranscribe(result);
             },
             error: function(msg) {
                 console.log(msg);
             }
         });
     });
+
+    function uploadAndTranscribe(filename) {
+        socket.emit("upload and transcribe", filename);
+    }
+
+    socket.on("upload and transcription complete", function(transcript_uri) {
+        location.href = document.location + "/" + transcript_uri;
+    })
 </script>
 
 
