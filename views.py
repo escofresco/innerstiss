@@ -83,6 +83,6 @@ def on_upload_and_transcribe(filename):
     # transcript_uri = transcribe_res["TranscriptionJob"][
     #     "Transcript"]["TranscriptFileUri"]
     # session[filename] = helpers.load_json_from_uri(transcript_uri)
-    time.sleep(60)
+    #time.sleep(60)
     transcript_uri = "testname"
     emit("upload and transcription complete", transcript_uri)
