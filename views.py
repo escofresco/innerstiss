@@ -2,7 +2,6 @@ import os
 import time
 from botocore.exceptions import ClientError
 from flask import flash, redirect, render_template, request, session, url_for
-from flask_socketio import emit
 from werkzeug import secure_filename
 
 from app import app, socketio
@@ -55,7 +54,7 @@ def upload():
 
 @app.route("/<transcript_id>")
 def view_transcript(transcript_id):
-    session["testname"] = {"jobName": "adsf", "results":{"transcripts": [{"transcript":"asdfjkhds hjdsajhsdhjlhjlsda jsdajh"}]}}
+    # session["testname"] = {"jobName": "adsf", "results":{"transcripts": [{"transcript":"asdfjkhds hjdsajhsdhjlhjlsda jsdajh"}]}}
     try:
         transcript = helpers.transcript_by_id(transcript_id)
         return render_template(
@@ -65,24 +64,45 @@ def view_transcript(transcript_id):
     except FileNotFoundError as e:
         return render_template("error_view.html", error_message=str(e))
 
-
 @socketio.on("upload and transcribe")
 def on_upload_and_transcribe(filename):
-    # try:
-    #     upload_res = helpers.upload_to_s3("tmp/"+filename, filename)
-    # except ClientError as e:
-    #     # return render_template("error_view.html",
-    #     #                        error_message=str(e))
-    #     return str(e)
-    # try:
-    #     transcribe_res = helpers.transcribe(filename)
-    # except ClientError as e:
-    #     # return render_template("error_view.html",
-    #     #                        error_message=str(e))
-    #     return str(e)
-    # transcript_uri = transcribe_res["TranscriptionJob"][
-    #     "Transcript"]["TranscriptFileUri"]
-    # session[filename] = helpers.load_json_from_uri(transcript_uri)
-    #time.sleep(60)
-    transcript_uri = "testname"
-    emit("upload and transcription complete", transcript_uri)
+    socketio.sleep(0)
+    try:
+        socketio.emit("progress update", "upload started")
+        upload_res = helpers.upload_to_s3("tmp/"+filename, filename)
+        socketio.sleep(0)
+        socketio.emit("progress update", "upload successful")
+        socketio.sleep(0)
+    except ClientError as e:
+        # return render_template("error_view.html",
+        #                        error_message=str(e))
+        return str(e)
+    try:
+        socketio.emit("progress update", "transcription started")
+        socketio.sleep(0)
+        transcribe_res = helpers.transcribe(filename)
+        socketio.emit("progress update", "waiting...")
+        socketio.sleep(0)
+        socketio.emit("progress update", "transcription succesful")
+        socketio.sleep(0)
+    except ClientError as e:
+        # return render_template("error_view.html",
+        #                        error_message=str(e))
+        return str(e)
+    transcript_uri = transcribe_res["TranscriptionJob"][
+        "Transcript"]["TranscriptFileUri"]
+    session[filename] = helpers.load_json_from_uri(transcript_uri)
+
+    # socketio.sleep(0)
+    # socketio.emit("progress update", "upload started")
+    # socketio.sleep(2)
+    # socketio.emit("progress update", "upload successful")
+    # socketio.sleep(5)
+    # socketio.emit("progress update", "transcription started")
+    # socketio.emit("progress update", "waiting...")
+    # socketio.sleep(33)
+    # socketio.emit("progress update", "transcription succesful")
+    # socketio.sleep(10)
+    #transcript_uri = "testname"
+    socketio.emit("upload and transcription complete", filename)
+    socketio.sleep(0)
