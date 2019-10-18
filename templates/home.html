@@ -5,6 +5,9 @@
     <input type="file" id="file" name="file" autocomplete="off" required >
     <button type="submit">Upload</button>
 </form>
+<div id="feedback">
+
+</div>
 <script type="text/javascript">
     //var socket = io.connect('http://127.0.0.1:5000');
     if (window.location.protocol == "https:") {
@@ -28,22 +31,29 @@
             processData: false,
             success: function(result) {
                 console.log(result);
+                $("#feedback").html("<p>file upload succesful</p>");
                 //location.href = document.location + "/" + result
                 uploadAndTranscribe(result);
             },
             error: function(msg) {
+                $("#feedback").text("<p>upload unsuccessful</p>");
                 console.log(msg);
             }
         });
     });
 
     function uploadAndTranscribe(filename) {
-        socket.emit("upload and transcribe", filename);
+        console.log("called uploadAndTranscribe")
+        socket.emit("upload and transcribe", {"data":filename});
     }
+
+    socket.on("progress update", function(progress) {
+        $("#feedback").append("<p>"+progress+"</p>");
+    });
 
     socket.on("upload and transcription complete", function(transcript_uri) {
         location.href = document.location + "/" + transcript_uri;
-    })
+    });
 </script>
 
 
