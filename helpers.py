@@ -8,7 +8,7 @@ from botocore.exceptions import ClientError
 from dotenv import load_dotenv
 from flask import session
 
-from app import app
+from app import app, socketio
 
 load_dotenv()
 
@@ -32,8 +32,10 @@ def transcribe(filename):
                 'COMPLETED', 'FAILED'
         ]:
             break
-        print("Not ready yet...")
-        time.sleep(5)
+        #print("Not ready yet...")
+        #time.sleep(5)
+        socketio.sleep(5)
+        socketio.emit("progress update", "waiting...")
     print(status)
     return status
 
